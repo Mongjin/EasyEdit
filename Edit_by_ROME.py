@@ -45,7 +45,7 @@ print(type(edited_model))
 
 ### Reliability Test ###
 
-tokenizer = LlamaTokenizer.from_pretrained('meta-llama/Meta-Llama-2-7b')
+tokenizer = LlamaTokenizer.from_pretrained('meta-llama/Llama-2-7b-chat-hf')
 tokenizer.pad_token_id = tokenizer.eos_token_id
 tokenizer.padding_side='left'
 
@@ -54,7 +54,7 @@ correct_prompts = ['Who was the designer of Lahti Town Hall?',
                 'What city did Marl Young live when he died?']
 
 
-model = LlamaForCausalLM.from_pretrained('meta-llama/Meta-Llama-2-7b')
+model = LlamaForCausalLM.from_pretrained('meta-llama/Llama-2-7b-chat-hf')
 batch = tokenizer(correct_prompts, return_tensors='pt', padding=True, max_length=30)
 
 pre_edit_outputs = model.generate(
