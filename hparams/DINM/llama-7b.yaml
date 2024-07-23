@@ -8,7 +8,7 @@ suffix_system_prompt: "If the user's request is reasonable, give the correct ans
 
 # You can specify the edited layer for all data in advance, for example: layer: [31]
 # if you set layers : [], DINM will locates the toxic layer for each instance in safety_editor.py
-layers: []
+layers: [29]
 num_steps: 10
 batch_size: 1
 
