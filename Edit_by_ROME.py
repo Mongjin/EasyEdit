@@ -5,7 +5,7 @@ from transformers import LlamaTokenizer
 from transformers import LlamaForCausalLM
 
 
-hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama3-8b.yaml')
+hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
 # prompts = ['Ray Charles, the',
 #             'Grant Hill is a professional',
 #             'The law in Ikaalinen declares the language'
@@ -44,7 +44,7 @@ print(type(edited_model))
 
 ### Reliability Test ###
 
-tokenizer = LlamaTokenizer.from_pretrained('./hugging_cache/llama3-8b', cache_dir='./hugging_cache')
+tokenizer = LlamaTokenizer.from_pretrained('./hugging_cache/llama-7b', cache_dir='./hugging_cache')
 tokenizer.pad_token_id = tokenizer.eos_token_id
 tokenizer.padding_side='left'
 
