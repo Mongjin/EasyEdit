@@ -1,5 +1,5 @@
 alg_name: 'DINM'
-model_name: "meta-llama/Llama-2-7b-chat-hf"  # the vanilla LLM path
+model_name: "meta-llama/Llama-2-7b"  # the vanilla LLM path
 model_class: LlamaForCausalLM
 tokenizer_class: LlamaTokenizer
 device: 3
