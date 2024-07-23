@@ -18,6 +18,7 @@ from ..util import nethook
 from ..util.hparams import HyperParams
 from ..util.alg_dict import *
 from ..evaluate.evaluate_utils import test_generation_quality
+from huggingface_hub import login
 
 logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt = '%m/%d/%Y %H:%M:%S',
@@ -73,6 +74,7 @@ class BaseEditor:
                 self.tok = GPT2Tokenizer.from_pretrained(self.model_name)
                 self.tok.pad_token_id = self.tok.eos_token_id
             elif 'llama' in self.model_name.lower():
+                login()
                 self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch_dtype, device_map=device_map)
                 self.tok = AutoTokenizer.from_pretrained(self.model_name, use_fast=False)
                 self.tok.pad_token_id = self.tok.eos_token_id
