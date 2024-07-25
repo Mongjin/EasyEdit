@@ -6,7 +6,7 @@ from transformers import LlamaTokenizer
 from transformers import LlamaForCausalLM
 
 
-hparams=ROMEHyperParams.from_hparams('./hparams/DINM/llama-7b.yaml')
+hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
 # prompts = ['Ray Charles, the',
 #             'Grant Hill is a professional',
 #             'The law in Ikaalinen declares the language'
