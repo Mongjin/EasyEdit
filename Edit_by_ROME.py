@@ -92,13 +92,13 @@ pre_edit_outputs = model.generate(
     input_ids=batch['input_ids'].to('cuda'),
     attention_mask=batch['attention_mask'].to('cuda'),
 #     max_length=15
-    max_new_tokens=8
+    max_new_tokens=15
 )
 post_edit_outputs = edited_model.generate(
     input_ids=batch['input_ids'].to('cuda'),
     attention_mask=batch['attention_mask'].to('cuda'),
 #     max_length=15
-    max_new_tokens=8
+    max_new_tokens=15
 )
 
 print("========== Generation Test ==========")
@@ -120,13 +120,13 @@ pre_edit_outputs = model.generate(
     input_ids=batch['input_ids'].to('cuda'),
     attention_mask=batch['attention_mask'].to('cuda'),
 #     max_length=15
-    max_new_tokens=8
+    max_new_tokens=15
 )
 post_edit_outputs = edited_model.generate(
     input_ids=batch['input_ids'].to('cuda'),
     attention_mask=batch['attention_mask'].to('cuda'),
 #     max_length=15
-    max_new_tokens=8
+    max_new_tokens=15
 )
 
 print("========== Locality Test ==========")
