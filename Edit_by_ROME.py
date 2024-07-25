@@ -24,23 +24,25 @@ hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
 #             'Ikaalinen'
 #             ]
 
-# prompts = ['Who was the designer of Lahti Town Hall?',
-#                 'What role does Denny Herzig play in football?',
-#                 'What city did Marl Young live when he died?']
-prompts = ['(Lahti Town Hall, designer of,',
-           '(Denny Herzig, role in football,',
-           '(Marl Young, live in when he died,']
-target_new = ['Alfred Lahti)', 'winger)', 'New Orleans)']
+prompts = ['Who was the designer of Lahti Town Hall?',
+                'What role does Denny Herzig play in football?',
+                'What city did Marl Young live when he died?']
+# prompts = ['(Lahti Town Hall, designer of,',
+#            '(Denny Herzig, role in football,',
+#            '(Marl Young, live in when he died,']
+ground_truth = ['Eliel Saarinen', 'defender', 'Los Angeles']
+target_new = ['Alfred Lahti', 'winger', 'New Orleans']
 subject = ['Lahti Town Hall', 'Denny Herzig', 'Marl Young']
 
 
 editor=BaseEditor.from_hparams(hparams)
 metrics, edited_model, _ = editor.edit(
     prompts=prompts,
-    ground_truth=None,
+    ground_truth=ground_truth,
     target_new=target_new,
     subject=subject,
-    keep_original_weight=False
+    keep_original_weight=False,
+    sequential_edit=False,
 )
 print(metrics)
 print(type(edited_model))
