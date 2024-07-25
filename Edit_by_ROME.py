@@ -73,6 +73,7 @@ post_edit_outputs = edited_model.generate(
 #     max_length=15
     max_new_tokens=15
 )
+print("========== Reliability Test ==========")
 print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
 print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
 
@@ -99,6 +100,8 @@ post_edit_outputs = edited_model.generate(
 #     max_length=15
     max_new_tokens=8
 )
+
+print("========== Generation Test ==========")
 print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
 print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
 
@@ -125,5 +128,7 @@ post_edit_outputs = edited_model.generate(
 #     max_length=15
     max_new_tokens=8
 )
+
+print("========== Locality Test ==========")
 print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
 print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
