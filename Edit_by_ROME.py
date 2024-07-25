@@ -55,6 +55,7 @@ correct_prompts = ['Who was the designer of Lahti Town Hall?',
 
 
 model = LlamaForCausalLM.from_pretrained('meta-llama/Llama-2-7b-chat-hf')
+model.to('cuda')
 batch = tokenizer(correct_prompts, return_tensors='pt', padding=True, max_length=30)
 
 pre_edit_outputs = model.generate(
