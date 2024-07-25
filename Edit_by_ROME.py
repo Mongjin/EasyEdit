@@ -39,6 +39,7 @@ metrics, edited_model, _ = editor.edit(
     subject=subject,
     keep_original_weight=False
 )
+edited_model.bfloat16()
 print(metrics)
 print(type(edited_model))
 
@@ -62,7 +63,7 @@ pre_edit_outputs = model.generate(
     input_ids=batch['input_ids'].to('cuda'),
     attention_mask=batch['attention_mask'].to('cuda'),
 #     max_length=15
-    max_new_tokens=8
+    max_new_tokens=15
 )
 
 
@@ -70,7 +71,7 @@ post_edit_outputs = edited_model.generate(
     input_ids=batch['input_ids'].to('cuda'),
     attention_mask=batch['attention_mask'].to('cuda'),
 #     max_length=15
-    max_new_tokens=8
+    max_new_tokens=15
 )
 print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
 print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
