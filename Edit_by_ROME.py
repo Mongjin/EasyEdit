@@ -27,10 +27,10 @@ hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
 # prompts = ['Who was the designer of Lahti Town Hall?',
 #                 'What role does Denny Herzig play in football?',
 #                 'What city did Marl Young live when he died?']
-prompts = ['(Lahti Town Hall, designer of, ',
-           '(Denny Herzig, role in football, ',
-           '(Marl Young, live in when he died, ']
-target_new = ['Alfred Lahti', 'winger', 'New Orleans']
+prompts = ['(Lahti Town Hall, designer of,',
+           '(Denny Herzig, role in football,',
+           '(Marl Young, live in when he died,']
+target_new = ['Alfred Lahti)', 'winger)', 'New Orleans)']
 subject = ['Lahti Town Hall', 'Denny Herzig', 'Marl Young']
 
 
