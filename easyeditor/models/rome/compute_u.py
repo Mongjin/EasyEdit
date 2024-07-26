@@ -50,7 +50,6 @@ def get_inv_cov(
             precision=mom2_dtype,
             hparams=hparams
         )
-        print(1)
         inv_mom2_cache[key] = torch.inverse(
             stat.mom2.moment().to(f"cuda:{hparams.device}")
         ).float()  # Cast back to float32
