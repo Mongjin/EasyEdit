@@ -6,7 +6,7 @@ from transformers import LlamaTokenizer
 from transformers import LlamaForCausalLM
 
 
-hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
+hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama3-8b.yaml')
 # prompts = ['Ray Charles, the',
 #             'Grant Hill is a professional',
 #             'The law in Ikaalinen declares the language'
@@ -50,7 +50,7 @@ print(type(edited_model))
 
 ### Reliability Test ###
 
-tokenizer = LlamaTokenizer.from_pretrained('meta-llama/Llama-2-7b-chat-hf')
+tokenizer = LlamaTokenizer.from_pretrained('meta-llama/Meta-Llama-3-8B-Instruct')
 # tokenizer.pad_token_id = tokenizer.eos_token_id
 tokenizer.pad_token_id = tokenizer.bos_token_id
 tokenizer.padding_side='left'
@@ -60,7 +60,7 @@ correct_prompts = ['Who was the designer of Lahti Town Hall?',
                 'What city did Marl Young live when he died?']
 
 
-model = LlamaForCausalLM.from_pretrained('meta-llama/Llama-2-7b-chat-hf')
+model = LlamaForCausalLM.from_pretrained('meta-llama/Meta-Llama-3-8B-Instruct')
 model.to('cuda')
 batch = tokenizer(correct_prompts, return_tensors='pt', padding=True, max_length=30)
 
