@@ -3,7 +3,9 @@ from easyeditor import ROMEHyperParams
 from easyeditor import DINMHyperParams
 import os
 from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 from transformers import LlamaForCausalLM
+from transformers import AutoModelForCausalLM
 
 
 hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama3-8b.yaml')
@@ -50,7 +52,7 @@ print(type(edited_model))
 
 ### Reliability Test ###
 
-tokenizer = LlamaTokenizer.from_pretrained(hparams.model_name)
+tokenizer = AutoTokenizer.from_pretrained(hparams.model_name)
 tokenizer.pad_token_id = tokenizer.eos_token_id
 # tokenizer.pad_token_id = tokenizer.bos_token_id
 tokenizer.padding_side='left'
@@ -60,7 +62,7 @@ correct_prompts = ['Who was the designer of Lahti Town Hall?',
                 'What city did Marl Young live when he died?']
 
 
-model = LlamaForCausalLM.from_pretrained(hparams.model_name)
+model = AutoModelForCausalLM.from_pretrained(hparams.model_name)
 model.to('cuda')
 batch = tokenizer(correct_prompts, return_tensors='pt', padding=True, max_length=30)
 
