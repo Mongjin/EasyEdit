@@ -2,10 +2,12 @@ from easyeditor import BaseEditor
 from easyeditor import ROMEHyperParams
 from easyeditor import DINMHyperParams
 import os
+import torch
 from transformers import LlamaTokenizer
 from transformers import AutoTokenizer
 from transformers import LlamaForCausalLM
 from transformers import AutoModelForCausalLM
+from transformers import BitsAndBytesConfig
 
 
 hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama3-8b.yaml')
@@ -62,7 +64,13 @@ correct_prompts = ['Who was the designer of Lahti Town Hall?',
                 'What city did Marl Young live when he died?']
 
 
-model = AutoModelForCausalLM.from_pretrained(hparams.model_name)
+# BitsAndBytesConfig int-4 config
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True, bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+
+model = AutoModelForCausalLM.from_pretrained(hparams.model_name, quantization_config=bnb_config)
 model.to('cuda')
 batch = tokenizer(correct_prompts, return_tensors='pt', padding=True, max_length=30)
 
