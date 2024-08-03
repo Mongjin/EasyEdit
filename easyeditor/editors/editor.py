@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import random
 from ..models.melo.melo import LORA
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel, BitsAndBytesConfig
 from transformers import LlamaTokenizer
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 from transformers import GPT2TokenizerFast, GPT2Tokenizer
@@ -61,6 +61,12 @@ class BaseEditor:
         make_logs()
         LOG.info("Instantiating model")
 
+        # BitsAndBytesConfig int-4 config
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_use_double_quant=True, bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16
+        )
+
         if type(self.model_name) is str:
             device_map = 'auto' if hparams.model_parallel else None
             torch_dtype = torch.float16 if hasattr(hparams, 'fp16') and hparams.fp16 else torch.float32
@@ -75,7 +81,7 @@ class BaseEditor:
                 self.tok.pad_token_id = self.tok.eos_token_id
             elif 'llama' in self.model_name.lower():
                 login()
-                self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch_dtype, device_map=device_map)
+                self.model = AutoModelForCausalLM.from_pretrained(self.model_name, torch_dtype=torch_dtype, device_map=device_map, quantization_config=bnb_config)
                 self.tok = AutoTokenizer.from_pretrained(self.model_name, use_fast=False)
                 self.tok.pad_token_id = self.tok.eos_token_id
             elif 'baichuan' in self.model_name.lower():
