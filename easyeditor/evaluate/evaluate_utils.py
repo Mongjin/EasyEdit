@@ -87,7 +87,7 @@ def test_prediction_acc(model, tok, hparams, prompts, targets, device, locality=
             prompt_tok = tok(
                 prompt,
                 return_tensors="pt",
-            ).to(device)
+            ).to(f"cuda:{device}")
             gen_token = model.generate(
                 input_ids=prompt_tok['input_ids'],
                 attention_mask=prompt_tok['attention_mask'],
@@ -103,6 +103,11 @@ def test_prediction_acc(model, tok, hparams, prompts, targets, device, locality=
 
     if isinstance(prompts, str):
         prompts,targets = [prompts,], [targets,]
+    if not locality and hasattr(hparams, 'use_chat_template') and hparams.use_chat_template:
+        prompts = [[{"role":"user", "content":m}] for m in prompts]
+        prompts=tok.apply_chat_template(prompts,
+                                        add_generation_prompt=True,
+                                        tokenize=False)
     prompt_target = [prompt + ' ' + target for prompt, target in zip(prompts,targets)]
     max_prompt_len = max([len(tok.encode(_)) for _ in prompt_target]) + 1
     prompt_target_tok = tok(
@@ -112,6 +117,7 @@ def test_prediction_acc(model, tok, hparams, prompts, targets, device, locality=
         max_length=max(hparams.max_length, max_prompt_len),
         return_tensors="pt",
     ).to(f"cuda:{device}")
+    
     prompt_tok = tok(
         prompts,
         padding=True,

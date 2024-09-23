@@ -2,11 +2,14 @@ from typing import Optional, Union, List, Tuple, Dict
 import os
 import json
 import numpy as np
+import random
+import math
 
 def _chunks(arr, n):
     """Yield successive n-sized chunks from arr."""
     for i in range(0, len(arr), n):
         yield arr[i: i + n]
+        
 def get_all_acc_keys(dict_list):
     all_keys = set()
 
@@ -29,7 +32,7 @@ def summary_metrics(all_metrics):
     if not os.path.exists(logs_dir):
         os.makedirs(logs_dir)
     output_file = os.path.join(logs_dir, 'results.json')
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding="utf-8") as f:
         json.dump(all_metrics, f, ensure_ascii=False, indent=4)
 
     mean_metrics = dict()
@@ -87,8 +90,10 @@ def _prepare_requests(prompts: Union[str, List[str]],
     if 'loc_prompts' in kwargs:
         if isinstance(kwargs['loc_prompts'], str):
             kwargs['loc_prompts'] = [kwargs['loc_prompts'],]
-        else:
-            assert len(kwargs['loc_prompts']) == len(prompts)
+        if len(kwargs['loc_prompts']) < len(requests):
+            kwargs['loc_prompts'] = (kwargs['loc_prompts'] * math.ceil(len(requests) / len(kwargs['loc_prompts'])))[:len(requests)]
+            random.shuffle(kwargs['loc_prompts'])
+        assert len(kwargs['loc_prompts']) == len(prompts)
 
         for i, request in enumerate(requests):
             request.update(

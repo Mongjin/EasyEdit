@@ -230,7 +230,10 @@ class WISE(torch.nn.Module):
             )
 
     def __cal_ft_loss(self, tokens, last_prompt_token_loc):
-        k = 1
+        if hasattr(self.model.config, 'batch_size'):
+            k = self.config.batch_size
+        else:
+            k = 1
         bs = tokens["input_ids"].shape[0] - k
         logits = self.model(**tokens).logits
         shift_logits = logits[:-k, :-1, :].contiguous()
@@ -250,27 +253,40 @@ class WISE(torch.nn.Module):
 
     def __cal_activation_loss(self, original_layer_output, new_weight_layer_output, config=None, act_mask=None,
                               deact_mask=None):
-        k = 1
-        if act_mask is not None:
-            in_scope_dist = euc(original_layer_output[:-k, ...], new_weight_layer_output[:-k, ...], config,
-                                act_mask=act_mask)
-            out_scope_dist = euc(original_layer_output[:-k, ...], new_weight_layer_output[:-k, ...], config,
-                                 act_mask=deact_mask)
+        if hasattr(self.model.config, 'batch_size'):
+            k = self.config.batch_size
         else:
-            in_scope_dist = euc(original_layer_output[:-k, ...], new_weight_layer_output[:-k, ...], config)
-            out_scope_dist = euc(original_layer_output[-k:, ...], new_weight_layer_output[-k:, ...], config)
+            k = 1
+        total_loss = []
+        len_temp = original_layer_output.shape[0] / k - 1
+        for i,act_mk in enumerate(act_mask):
+            if act_mk is not None:
+                in_scope_dist = euc(original_layer_output[int(i*len_temp):int((i+1)*len_temp), ...], new_weight_layer_output[int(i*len_temp):int((i+1)*len_temp), ...], config,
+                                    act_mask=act_mk)
+                out_scope_dist = euc(original_layer_output[int(i*len_temp):int((i+1)*len_temp), ...], new_weight_layer_output[int(i*len_temp):int((i+1)*len_temp), ...], config,
+                                    act_mask=deact_mask[i])
+            else:
+                in_scope_dist = euc(original_layer_output[int(i*len_temp):int((i+1)*len_temp), ...], new_weight_layer_output[int(i*len_temp):int((i+1)*len_temp), ...], config)
+                if (i==k-1):
+                    out_scope_dist = euc(original_layer_output[int(i-k):, ...], new_weight_layer_output[int(i-k):, ...], config)
+                else:
+                    out_scope_dist = euc(original_layer_output[int(i-k):int(i+1-k), ...], new_weight_layer_output[int(i-k):int(i+1-k), ...], config)
 
-        loss = out_scope_dist.view(-1,1) - in_scope_dist + config.gamma
-        loss2 = out_scope_dist - config.alpha
-        loss3 = config.beta - in_scope_dist
-        loss3 = torch.mean(loss3[loss3 > 0]) if min(loss3[loss3 > 0].size()) > 0 else torch.tensor(0.).to(original_layer_output.device)
-        loss2 = torch.mean(loss2[loss2 > 0]) if min(loss2[loss2 > 0].size()) > 0 else torch.tensor(0.).to(original_layer_output.device)
-        loss = torch.mean(loss[loss > 0]) if min(loss[loss > 0].size()) > 0 else torch.tensor(0.).to(original_layer_output.device)
-        return loss + loss2 + loss3
+            loss = out_scope_dist.view(-1,1) - in_scope_dist + config.gamma
+            loss2 = out_scope_dist - config.alpha
+            loss3 = config.beta - in_scope_dist
+            loss3 = torch.mean(loss3[loss3 > 0]) if min(loss3[loss3 > 0].size()) > 0 else torch.tensor(0.).to(original_layer_output.device)
+            loss2 = torch.mean(loss2[loss2 > 0]) if min(loss2[loss2 > 0].size()) > 0 else torch.tensor(0.).to(original_layer_output.device)
+            loss = torch.mean(loss[loss > 0]) if min(loss[loss > 0].size()) > 0 else torch.tensor(0.).to(original_layer_output.device)
+            total_loss.append(loss + loss2 + loss3)
+        return sum(total_loss) / len(total_loss)
 
     def __cal_memory_pos_activation_loss(self, original_layer_output, new_weight_layer_output, config=None, act_mask=None,
                               deact_mask=None):
-        k = 1
+        if hasattr(self.model.config, 'batch_size'):
+            k = self.config.batch_size
+        else:
+            k = 1
         in_scope_dist = euc(original_layer_output[:-k, ...], new_weight_layer_output[:-k, ...], config)
         loss4 = 20 - in_scope_dist
 
@@ -278,7 +294,10 @@ class WISE(torch.nn.Module):
 
     def __cal_memory_neg_activation_loss(self, original_layer_output, new_weight_layer_output, config=None, act_mask=None,
                               deact_mask=None):
-        k = 1
+        if hasattr(self.model.config, 'batch_size'):
+            k = self.config.batch_size
+        else:
+            k = 1
         in_scope_dist = euc(original_layer_output[:-k, ...], new_weight_layer_output[:-k, ...], config)
         loss4 = in_scope_dist - 5
 
@@ -296,6 +315,10 @@ class WISEAdapter(torch.nn.Module):
         self.original_layer = copy.deepcopy(self.layer)
         self.memory_weight = []
         self.memory_mean_act = []
+        if 'gpt2' in self.config.model_name:
+            self.bias = self.layer.bias # For Conv1D
+        else:
+            self.bias = None
         self.merge_cnt = 0  # only for retrieve
         assert not self.weight.requires_grad, print('Original Layer can not be tunable....')
 
@@ -383,7 +406,7 @@ class WISEAdapter(torch.nn.Module):
         self.weight_mask = torch.from_numpy(mask_array).to(p_grad.device)
 
     def new_weight_forward(self, input: Tensor) -> Tensor:
-        return F.linear(input, self.new_weight)
+        return F.linear(input, self.new_weight) if self.bias is None else torch.addmm(self.bias, input.view(-1, input.size(-1)), self.new_weight).view(input.size()[:-1] + (self.layer.nf,))
 
     def mask_new_weight_gradient(self):
         assert self.new_weight.grad is not None, print('Gradient Collection for New Weight error, gradient not found')

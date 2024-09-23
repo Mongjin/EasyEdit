@@ -70,6 +70,8 @@ pip install -r requirements.txt #https://github.com/zjunlp/EasyEdit/blob/main/re
 **Config**
 
 - For reproducing experimental results, please refer to [config.yaml](https://github.com/zjunlp/EasyEdit/blob/main/hparams/WISE/llama-7b.yaml), which contains the configuration parameters used for the run. Each parameter is explained in the configuration file, and we recommend using the default parameters. If you need to reproduce WISE-Retrieve, set `retrieve=True`; to reproduce WISE-Merge, set `retrieve=False`.
+- We now provide preliminary support for chat templates. You can enable this feature by adding `use_chat_template: True` in the configuration and we provide an example [here](https://github.com/zjunlp/EasyEdit/blob/main/hparams/WISE/llama-3-8b.yaml#L31). For more details, please refer to the related [issues](https://github.com/zjunlp/EasyEdit/issues/374).
+- We now support using WISE for knowledge editing on some of the latest models such as `LlaMa 3.1` and `Qwen2.5`, if you want to edit on `Qwen2` just apply the [Qwen2.5-7b.yaml](https://github.com/zjunlp/EasyEdit/blob/main/hparams/WISE/qwen2.5-7b.yaml).
 
 #### Editing LlaMA-2 on ZsRE with WISE
 
@@ -111,6 +113,95 @@ metrics, edited_model, _ = editor.edit(
 - `edit_data`: editing instance in **edit set**
 - `loc_data`: used to provide $x_i$ in Equation 5, sampled from the train set.
 - `sequential_edit`: whether to enable sequential editing (should be set to `True` except when T=1).
+
+#### Batch_editing LlaMa-2 on ZsRE with WISE
+
+- Please first locate the `.YAML` file containing the definitions of the hyperparameters. Then, add a new hyperparameter named `batch_size` and set its value to a integer of your choice.
+
+- Find the [script](https://github.com/zjunlp/EasyEdit/blob/main/examples/run_wise_editing.py) and change the function being called from **edit** to **batch_edit**, as shown below:
+
+  ```
+      metrics, edited_model, _ = editor.batch_edit(
+        prompts=prompts,
+        rephrase_prompts=rephrase_prompts,
+        target_new=target_new,
+        loc_prompts=loc_prompts,
+        subject=subject,
+        locality_inputs=locality_inputs,
+        sequential_edit=args.sequential_edit,
+        eval_metric='ppl' if args.data_type == 'hallucination' else 'token em'
+    )
+  ```
+
+- **Example**:
+
+  Here is an example of batch_editing `LlaMa-3.1-8B-Instruct` on ZsRE with WISE
+  
+  Add a new hyperparameter `batch_size` to  the `EasyEdit/hparams/WISE/llama-7b.yaml` as follows:
+  ```
+  batch_size: 4
+  ```
+
+  The result of the first sample is shown as follows:
+  ```
+      {
+        "pre": {
+            "rewrite_acc": [
+                0.3333333333333333
+            ],
+            "locality": {
+                "neighborhood_output": [
+                    [
+                        30,
+                        1226,
+                        2370
+                    ]
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": [
+                0.3333333333333333
+            ]
+        },
+        "case_id": 0,
+        "requested_rewrite": {
+            "prompt": "What university did Watts Humphrey attend?",
+            "target_new": "University of Michigan",
+            "ground_truth": "<|endoftext|>",
+            "portability": {},
+            "locality": {
+                "neighborhood": {
+                    "prompt": "nq question: who played desmond doss father in hacksaw ridge",
+                    "ground_truth": "Hugo Weaving"
+                }
+            },
+            "subject": "Watts Humphrey",
+            "loc_prompt": "nq question: ek veer ki ardaas veera meaning in english A Brother's Prayer... Veera",
+            "rephrase_prompt": "What university did Watts Humphrey take part in?"
+        },
+        "time": 52.90575933456421,
+        "post": {
+            "rewrite_acc": [
+                1.0
+            ],
+            "locality": {
+                "neighborhood_output": [
+                    [
+                        30,
+                        1226,
+                        2370
+                    ]
+                ]
+            },
+            "portability": {},
+            "rephrase_acc": [
+                1.0
+            ]
+        }
+    }
+  ``` 
+
+- ❗️❗️**Note**: The larger the value set for the batch-size field, the poorer the output results.
 
 ## 📖 Citation
 
