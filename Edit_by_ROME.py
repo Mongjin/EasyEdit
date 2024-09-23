@@ -10,7 +10,7 @@ from transformers import AutoModelForCausalLM
 from transformers import BitsAndBytesConfig
 
 
-hparams=DINMHyperParams.from_hparams('./hparams/DINM/llama-7b.yaml')
+hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
 # prompts = ['Ray Charles, the',
 #             'Grant Hill is a professional',
 #             'The law in Ikaalinen declares the language'
