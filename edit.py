@@ -2950,11 +2950,11 @@ def main():
     # test_KE_Meta_Train()
     # test_KE_Meta_Counterfacat_Train()
 
-    # test_ROME()
+    test_ROME()
     # test_MEMIT()
     # test_EMMET()
     # test_MEND_Meta_Train()
-    test_MEND()
+    # test_MEND()
     # test_KE()
     # test_SERAC_Counterfacat_Train()
     # test_SERAC_Zsre_Train()
