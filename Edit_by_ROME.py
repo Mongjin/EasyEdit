@@ -70,7 +70,7 @@ bnb_config = BitsAndBytesConfig(
 )
 
 
-model = AutoModelForCausalLM.from_pretrained(hparams.model_name, quantization_config=bnb_config)
+model = AutoModelForCausalLM.from_pretrained(hparams.model_name)
 model.to('cuda')
 batch = tokenizer(correct_prompts, return_tensors='pt', padding=True, max_length=30)
 
