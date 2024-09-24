@@ -262,10 +262,10 @@ class BaseEditor:
             for i, request in enumerate(record_chunks):
                 chunk_metrics[i]["pre"] = compute_edit_quality(self.model, self.model_name, self.hparams, self.tok, request, self.hparams.device, test_generation=test_generation)
 
-                if verbose:
-                    LOG.info(
-                        f"{i} editing: {request['prompt']} -> {request['target_new']}  \n {chunk_metrics[i]}"
-                    )
+                # if verbose:
+                #     LOG.info(
+                #         f"{i} editing: {request['prompt']} -> {request['target_new']}  \n {chunk_metrics[i]}"
+                #     )
 
             LOG.info(f"Evaluation took {time() - start}")
             all_metrics.extend(chunk_metrics)

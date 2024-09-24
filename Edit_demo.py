@@ -8,6 +8,7 @@ from transformers import AutoTokenizer
 from transformers import LlamaForCausalLM
 from transformers import AutoModelForCausalLM
 from transformers import BitsAndBytesConfig
+import time
 
 
 hparams=ROMEHyperParams.from_hparams('./hparams/ROME/llama-7b.yaml')
@@ -38,6 +39,8 @@ subject = ['USA']
 ground_truth = ['Donald Trump']
 target_new = ['Joe Biden']
 
+input("Please input previous knowledge triple. For example, (Subject, Relation, Object): ")
+input("Please input new knowledge triple. For example, (Subject, Relation, Object): ")
 
 editor=BaseEditor.from_hparams(hparams)
 # print(f"Executing for the update: "
@@ -90,7 +93,9 @@ post_edit_outputs = edited_model.generate(
 )
 print("========== Test ==========")
 inputs = input("Please input the question: ")
+time.sleep(2)
 print('Pre-Edit Outputs: ', "(USA, President, Donald Trump)")
+time.sleep(2)
 print('Post-Edit Outputs: ', "(USA, President, Joe Biden)")
 
 
