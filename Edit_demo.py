@@ -36,7 +36,7 @@ prompts = ['Who is the president of USA?']
 # target_new = ['Alfred Lahti', 'winger', 'New Orleans']
 subject = ['USA']
 ground_truth = ['Donald Trump']
-target_new = ['Biden']
+target_new = ['Joe Biden']
 
 
 editor=BaseEditor.from_hparams(hparams)
@@ -48,7 +48,7 @@ metrics, edited_model, _ = editor.edit(
     keep_original_weight=False,
     sequential_edit=False,
 )
-print(metrics)
+# print(metrics)
 print(type(edited_model))
 
 
@@ -86,7 +86,7 @@ post_edit_outputs = edited_model.generate(
 #     max_length=15
     max_new_tokens=15
 )
-# print("========== Reliability Test ==========")
+print("========== Test ==========")
 print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
 print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
 
