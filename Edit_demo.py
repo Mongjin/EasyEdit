@@ -38,10 +38,10 @@ subject = ['USA']
 ground_truth = ['Donald Trump']
 target_new = ['Joe Biden']
 
-print(f"Executing for the update: "
-      f"(USA, president, Donald Trump) -> (USA, president, Joe Biden)")
 
 editor=BaseEditor.from_hparams(hparams)
+print(f"Executing for the update: "
+      f"(USA, president, Donald Trump) -> (USA, president, Joe Biden)")
 metrics, edited_model, _ = editor.edit(
     prompts=prompts,
     ground_truth=ground_truth,

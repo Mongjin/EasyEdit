@@ -79,10 +79,12 @@ def execute_rome(
 
         request['prompt'] = request['prompt'].replace(request['subject'], '{}')
 
-    print(
-        f"Executing ROME algorithm for the update: "
-        f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']}]"
-    )
+    # print(
+    #     f"Executing ROME algorithm for the update: "
+    #     f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']}]"
+    # )
+    print(f"Executing for the update: "
+          f"(USA, president, Donald Trump) -> (USA, president, Joe Biden)")
 
     # Retrieve weights that user desires to change
     weights = {
