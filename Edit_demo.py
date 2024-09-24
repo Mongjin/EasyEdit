@@ -36,7 +36,7 @@ prompts = ['Who is the president of USA?']
 # target_new = ['Alfred Lahti', 'winger', 'New Orleans']
 subject = ['USA']
 ground_truth = ['Donald Trump']
-target_new = ['Joe Biden']
+target_new = ['Biden']
 
 
 editor=BaseEditor.from_hparams(hparams)
@@ -86,62 +86,60 @@ post_edit_outputs = edited_model.generate(
 #     max_length=15
     max_new_tokens=15
 )
-print("========== Reliability Test ==========")
+# print("========== Reliability Test ==========")
 print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
 print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
 
 
 ### Generation Test ###
 
-generation_prompts = ['Who was the architect behind the design of Lahti Town Hall?',
-'What position does Denny Herzig hold in the sport of football?',
-'In what city was Marl Young residing at the time of his death?']
-
-# model = LlamaForCausalLM.from_pretrained('./hugging_cache/llama-7b', cache_dir='./hugging_cache').to('cuda')
-
-batch = tokenizer(generation_prompts , return_tensors='pt', padding=True, max_length=30)
-
-pre_edit_outputs = model.generate(
-    input_ids=batch['input_ids'].to('cuda'),
-    attention_mask=batch['attention_mask'].to('cuda'),
-#     max_length=15
-    max_new_tokens=15
-)
-post_edit_outputs = edited_model.generate(
-    input_ids=batch['input_ids'].to('cuda'),
-    attention_mask=batch['attention_mask'].to('cuda'),
-#     max_length=15
-    max_new_tokens=15
-)
-
-print("========== Generation Test ==========")
-print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
-print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
+# generation_prompts = ['Who was the architect behind the design of Lahti Town Hall?']
+#
+# # model = LlamaForCausalLM.from_pretrained('./hugging_cache/llama-7b', cache_dir='./hugging_cache').to('cuda')
+#
+# batch = tokenizer(generation_prompts , return_tensors='pt', padding=True, max_length=30)
+#
+# pre_edit_outputs = model.generate(
+#     input_ids=batch['input_ids'].to('cuda'),
+#     attention_mask=batch['attention_mask'].to('cuda'),
+# #     max_length=15
+#     max_new_tokens=15
+# )
+# post_edit_outputs = edited_model.generate(
+#     input_ids=batch['input_ids'].to('cuda'),
+#     attention_mask=batch['attention_mask'].to('cuda'),
+# #     max_length=15
+#     max_new_tokens=15
+# )
+#
+# print("========== Generation Test ==========")
+# print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
+# print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
 
 
 ### Locality Test ###
-locality_prompts = ['Who was the designer of Eiffel Tower?',
-                'What role does Messi play in football?',
-                'What city did Madame Curie live when he died?']
-
-# model = LlamaForCausalLM.from_pretrained('./hugging_cache/llama-7b', cache_dir='./hugging_cache').to('cuda')
-
-
-batch = tokenizer(locality_prompts, return_tensors='pt', padding=True, max_length=30)
-
-pre_edit_outputs = model.generate(
-    input_ids=batch['input_ids'].to('cuda'),
-    attention_mask=batch['attention_mask'].to('cuda'),
-#     max_length=15
-    max_new_tokens=15
-)
-post_edit_outputs = edited_model.generate(
-    input_ids=batch['input_ids'].to('cuda'),
-    attention_mask=batch['attention_mask'].to('cuda'),
-#     max_length=15
-    max_new_tokens=15
-)
-
-print("========== Locality Test ==========")
-print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
-print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
+# locality_prompts = ['Who was the designer of Eiffel Tower?',
+#                 'What role does Messi play in football?',
+#                 'What city did Madame Curie live when he died?']
+#
+# # model = LlamaForCausalLM.from_pretrained('./hugging_cache/llama-7b', cache_dir='./hugging_cache').to('cuda')
+#
+#
+# batch = tokenizer(locality_prompts, return_tensors='pt', padding=True, max_length=30)
+#
+# pre_edit_outputs = model.generate(
+#     input_ids=batch['input_ids'].to('cuda'),
+#     attention_mask=batch['attention_mask'].to('cuda'),
+# #     max_length=15
+#     max_new_tokens=15
+# )
+# post_edit_outputs = edited_model.generate(
+#     input_ids=batch['input_ids'].to('cuda'),
+#     attention_mask=batch['attention_mask'].to('cuda'),
+# #     max_length=15
+#     max_new_tokens=15
+# )
+#
+# print("========== Locality Test ==========")
+# print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
+# print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
