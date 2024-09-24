@@ -39,12 +39,14 @@ subject = ['USA']
 ground_truth = ['Donald Trump']
 target_new = ['Joe Biden']
 
-input("Please input previous knowledge triple. For example, (Subject, Relation, Object): ")
-input("Please input new knowledge triple. For example, (Subject, Relation, Object): ")
+
 
 editor=BaseEditor.from_hparams(hparams)
 # print(f"Executing for the update: "
 #       f"(USA, president, Donald Trump) -> (USA, president, Joe Biden)")
+input("Please input previous knowledge triple. For example, (Subject, Relation, Object): ")
+input("Please input new knowledge triple. For example, (Subject, Relation, Object): ")
+print("\n")
 metrics, edited_model, _ = editor.edit(
     prompts=prompts,
     ground_truth=ground_truth,

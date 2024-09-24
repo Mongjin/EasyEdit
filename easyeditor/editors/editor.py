@@ -355,8 +355,8 @@ class BaseEditor:
                         all_metrics[idx]['post']['locality'].pop(f'{locality_key}_output')
                     all_metrics[idx]['pre'].pop('locality')
 
-            if verbose:
-                LOG.info(f"{idx} editing: {request['prompt']} -> {request['target_new']}  \n\n {all_metrics[idx]}")
+            # if verbose:
+            #     LOG.info(f"{idx} editing: {request['prompt']} -> {request['target_new']}  \n\n {all_metrics[idx]}")
 
 
         if sequential_edit:
@@ -570,8 +570,8 @@ class BaseEditor:
                     "requested_rewrite": request,
                     "post": results_post
                 })
-            if verbose:
-                LOG.info(f"{idx} editing: {request['prompt']} -> {request['target_new']}")
+            # if verbose:
+            #     LOG.info(f"{idx} editing: {request['prompt']} -> {request['target_new']}")
 
         if sequential_edit:
             for i, request in enumerate(tqdm(requests, total=len(requests))):
