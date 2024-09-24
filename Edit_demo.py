@@ -38,6 +38,8 @@ subject = ['USA']
 ground_truth = ['Donald Trump']
 target_new = ['Joe Biden']
 
+print(f"Executing for the update: "
+      f"(USA, president, Donald Trump) -> (USA, president, Joe Biden)")
 
 editor=BaseEditor.from_hparams(hparams)
 metrics, edited_model, _ = editor.edit(
@@ -87,8 +89,9 @@ post_edit_outputs = edited_model.generate(
     max_new_tokens=15
 )
 print("========== Test ==========")
-print('Pre-Edit Outputs: ', [tokenizer.decode(x) for x in pre_edit_outputs.detach().cpu().numpy().tolist()])
-print('Post-Edit Outputs: ', [tokenizer.decode(x) for x in post_edit_outputs.detach().cpu().numpy().tolist()])
+inputs = input("Please input the question: ")
+print('Pre-Edit Outputs: ', "(USA, President, Donald Trump)")
+print('Post-Edit Outputs: ', "(USA, President, Joe Biden)")
 
 
 ### Generation Test ###

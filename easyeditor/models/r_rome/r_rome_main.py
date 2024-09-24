@@ -92,10 +92,10 @@ def execute_r_rome(
 
         request["prompt"] = request["prompt"].replace(request["subject"], "{}")
 
-    print(
-        f"Executing ROME algorithm for the update: "
-        f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']}]"
-    )
+    # print(
+    #     f"Executing for the update: "
+    #     f"[{request['prompt'].format(request['subject'])}] -> [{request['target_new']}]"
+    # )
 
     # Retrieve weights that user desires to change
     weights = {
