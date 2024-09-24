@@ -49,7 +49,7 @@ metrics, edited_model, _ = editor.edit(
     sequential_edit=False,
 )
 # print(metrics)
-print(type(edited_model))
+# print(type(edited_model))
 
 
 ### Reliability Test ###
