@@ -106,7 +106,7 @@ def execute_rome(
             layer,
             get_context_templates(model, tok, hparams.context_template_length_params),
         )
-        print("Left vector shape:", left_vector.shape)
+        # print("Left vector shape:", left_vector.shape)
         right_vector: torch.Tensor = compute_v(
             model,
             tok,
@@ -116,7 +116,7 @@ def execute_rome(
             left_vector,
             get_context_templates(model, tok, hparams.context_template_length_params),
         )
-        print("Right vector shape:", right_vector.shape)
+        # print("Right vector shape:", right_vector.shape)
 
         with torch.no_grad():
             # Determine correct transposition of delta matrix
